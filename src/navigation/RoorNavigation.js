@@ -3,13 +3,14 @@ import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {stackName} from '../configs/NavigationContants';
 import Screens from '../screens';
+import HomeTab from './Tab/HomeTab';
 
 const Stack = createNativeStackNavigator();
 
 const RoorNavigation = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
-      <Stack.Screen name={stackName.homeStack} component={Screens.HomeScreen} />
+      <Stack.Screen name={stackName.homeStack} component={HomeTab} />
       <Stack.Screen
         name={stackName.loginStack}
         component={Screens.LoginScreen}

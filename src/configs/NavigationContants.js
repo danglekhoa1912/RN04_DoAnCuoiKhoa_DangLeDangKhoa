@@ -4,4 +4,10 @@ const stackName = {
   homeStack: 'HomeStack',
 };
 
-export {stackName};
+const tabName = {
+  homeTab: 'HomeTab',
+  profileTab: 'ProfileTab',
+  favouriteTab: 'FavouriteTab',
+};
+
+export {stackName, tabName};

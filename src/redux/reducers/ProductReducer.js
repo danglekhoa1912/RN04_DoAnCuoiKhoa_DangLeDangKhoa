@@ -1,4 +1,5 @@
 import {
+  REQUEST_LIST_CATEGORY_SUCCESS,
   REQUEST_LIST_PRODUCT_SUCCESS,
   REQUEST_PRODUCT_DETAIL_SUCCESS,
 } from '../actions/ProductAction';
@@ -6,6 +7,7 @@ import {
 const initialState = {
   listProducts: [],
   product: {},
+  listCategories: [],
 };
 
 export default (state = initialState, {type, payload}) => {
@@ -14,6 +16,9 @@ export default (state = initialState, {type, payload}) => {
       return {...state, listProducts: payload};
     case REQUEST_PRODUCT_DETAIL_SUCCESS:
       return {...state, product: payload};
+    case REQUEST_LIST_CATEGORY_SUCCESS:
+      return {...state, listCategories: payload};
+
     default:
       return state;
   }
