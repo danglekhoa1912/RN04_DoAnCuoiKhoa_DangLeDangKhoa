@@ -31,8 +31,8 @@ const HomeTab = () => {
     tabBarStyle: {
       position: 'absolute',
       bottom: 25,
-      left: 20,
-      right: 20,
+      left: 10,
+      right: 10,
       elevation: 0,
       borderColor: COLORS.primary,
       borderRadius: 25,

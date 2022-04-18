@@ -5,8 +5,9 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
+import AntIcon from 'react-native-vector-icons/AntDesign';
 
 import {
   requestListCategory,
@@ -14,10 +15,16 @@ import {
 } from '../../redux/thunk/ProductActionThunk';
 import {COLORS} from '../../themes';
 import {BackgroundView, Text} from '../../components/index';
-import {Facebook} from '../../assets';
+import {Avatar} from '../../assets';
+import CardItem from './CardItem';
 
 const HomeScreen = () => {
-  const listProduct = useSelector(state => state.ProductReducer.listProducts);
+  const [isAllProduct, setIsAllProduct] = useState(true);
+  const [nameCategory, setNameCategory] = useState('ADIDAS');
+
+  const listProduct = useSelector(
+    state => state.ProductReducer.listProducts,
+  ).content;
   const listCategory = useSelector(
     state => state.ProductReducer.listCategories,
   ).content;
@@ -27,32 +34,115 @@ const HomeScreen = () => {
     dispatch(requestListCategory());
   }, []);
 
-  const renderListCategory = ({category}) => {
+  const renderListCategory = ({category, id}) => {
     return (
-      <TouchableOpacity onPress={console.log('hi')}>
-        <Text>{category}</Text>
+      <TouchableOpacity
+        onPress={() => {
+          setNameCategory(id);
+        }}>
+        <Text color={nameCategory == id ? COLORS.lightBack : COLORS.white}>
+          {category}
+        </Text>
       </TouchableOpacity>
+    );
+  };
+
+  const renderAllProducts = () => {
+    return (
+      <View style={styles.containerProduct}>
+        <FlatList
+          numColumns={2}
+          data={listProduct}
+          renderItem={({item}) => <CardItem product={item} />}
+          ItemSeparatorComponent={() => <View style={{height: 30}} />}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingBottom: 300,
+            flexDirection: 'column',
+            paddingTop: 15,
+          }}
+          columnWrapperStyle={{flex: 1, justifyContent: 'space-between'}}
+        />
+      </View>
+    );
+  };
+
+  const renderCategoryProduct = () => {
+    const listProductCategory = listProduct.filter(item =>
+      JSON.parse(item.categories).some(
+        category => category.id === nameCategory,
+      ),
+    );
+    return (
+      <View>
+        <View style={styles.containerListCategory}>
+          <FlatList
+            style={{flexGrow: 0, marginVertical: 10, marginHorizontal: 10}}
+            data={listCategory}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            ItemSeparatorComponent={() => <View style={{width: 30}} />}
+            renderItem={({item}) => {
+              return renderListCategory(item);
+            }}
+          />
+        </View>
+        <View style={styles.containerProduct}>
+          <FlatList
+            numColumns={2}
+            data={listProductCategory}
+            renderItem={({item}) => <CardItem product={item} />}
+            ItemSeparatorComponent={() => <View style={{height: 30}} />}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingBottom: 380,
+              flexDirection: 'column',
+            }}
+            columnWrapperStyle={{flex: 1, justifyContent: 'space-between'}}
+          />
+        </View>
+      </View>
     );
   };
 
   return (
     <BackgroundView style={styles.container}>
       <View style={styles.containerAvatar}>
-        <Image style={styles.avatar} source={Facebook} />
+        <View>
+          <Image style={styles.avatar} source={Avatar} />
+          <Text bold title>
+            Welcome Name...
+          </Text>
+        </View>
+        <TouchableOpacity>
+          <AntIcon name="shoppingcart" size={30} />
+        </TouchableOpacity>
       </View>
       <View style={styles.containerTitle}>
-        <TouchableOpacity>
-          <Text color={COLORS.lightBack} bold header>
+        <TouchableOpacity
+          onPress={() => {
+            setIsAllProduct(true);
+          }}>
+          <Text
+            color={isAllProduct ? COLORS.lightBack : COLORS.white}
+            bold
+            header>
             All
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity>
-          <Text color={COLORS.lightBack} bold header>
+        <TouchableOpacity
+          onPress={() => {
+            setIsAllProduct(false);
+          }}>
+          <Text
+            color={!isAllProduct ? COLORS.lightBack : COLORS.white}
+            bold
+            header>
             Categories
           </Text>
         </TouchableOpacity>
       </View>
-      <View style={styles.containerListCategory}>
+      {/* <View style={styles.containerListCategory}>
         <FlatList
           style={{flexGrow: 0, marginVertical: 15, marginHorizontal: 10}}
           data={listCategory}
@@ -64,7 +154,21 @@ const HomeScreen = () => {
           }}
         />
       </View>
-      <View style={styles.containerProduct}></View>
+      <View style={styles.containerProduct}>
+        <FlatList
+          numColumns={2}
+          data={listProduct}
+          renderItem={({item}) => <CardItem product={item} />}
+          ItemSeparatorComponent={() => <View style={{height: 30}} />}
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingBottom: 300,
+            flexDirection: 'column',
+          }}
+          columnWrapperStyle={{flex: 1, justifyContent: 'space-between'}}
+        />
+      </View> */}
+      {isAllProduct ? renderAllProducts() : renderCategoryProduct()}
     </BackgroundView>
   );
 };
@@ -76,6 +180,9 @@ const styles = StyleSheet.create({
   },
   containerAvatar: {
     margin: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   avatar: {
     width: 50,
@@ -88,6 +195,9 @@ const styles = StyleSheet.create({
   },
   title: {
     color: COLORS.lightBack,
+  },
+  containerProduct: {
+    marginHorizontal: 20,
   },
 });
 

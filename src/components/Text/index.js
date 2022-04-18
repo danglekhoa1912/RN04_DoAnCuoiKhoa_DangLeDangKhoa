@@ -8,7 +8,7 @@ export default class Text extends Component {
     return (
       <RNText
         style={[
-          {color: color ? color : 'white'},
+          {color: color ? color : COLORS.lightBack},
           header && styles.header,
           bold && styles.bold,
           title && styles.title,
