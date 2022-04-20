@@ -15,7 +15,9 @@ export default (state = initialState, {type, payload}) => {
     case REQUEST_LIST_PRODUCT_SUCCESS:
       return {...state, listProducts: payload};
     case REQUEST_PRODUCT_DETAIL_SUCCESS:
-      return {...state, product: payload};
+      const newState = {...state};
+      newState.product = payload;
+      return newState;
     case REQUEST_LIST_CATEGORY_SUCCESS:
       return {...state, listCategories: payload};
 

@@ -22,12 +22,10 @@ const HomeScreen = () => {
   const [isAllProduct, setIsAllProduct] = useState(true);
   const [nameCategory, setNameCategory] = useState('ADIDAS');
 
-  const listProduct = useSelector(
-    state => state.ProductReducer.listProducts,
-  ).content;
+  const listProduct = useSelector(state => state.ProductReducer.listProducts);
   const listCategory = useSelector(
     state => state.ProductReducer.listCategories,
-  ).content;
+  );
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(requestListProduct());
@@ -107,8 +105,8 @@ const HomeScreen = () => {
 
   return (
     <BackgroundView style={styles.container}>
-      <View style={styles.containerAvatar}>
-        <View>
+      <View style={styles.header}>
+        <View style={styles.containerUser}>
           <Image style={styles.avatar} source={Avatar} />
           <Text bold title>
             Welcome Name...
@@ -142,52 +140,27 @@ const HomeScreen = () => {
           </Text>
         </TouchableOpacity>
       </View>
-      {/* <View style={styles.containerListCategory}>
-        <FlatList
-          style={{flexGrow: 0, marginVertical: 15, marginHorizontal: 10}}
-          data={listCategory}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          ItemSeparatorComponent={() => <View style={{width: 30}} />}
-          renderItem={({item}) => {
-            return renderListCategory(item);
-          }}
-        />
-      </View>
-      <View style={styles.containerProduct}>
-        <FlatList
-          numColumns={2}
-          data={listProduct}
-          renderItem={({item}) => <CardItem product={item} />}
-          ItemSeparatorComponent={() => <View style={{height: 30}} />}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingBottom: 300,
-            flexDirection: 'column',
-          }}
-          columnWrapperStyle={{flex: 1, justifyContent: 'space-between'}}
-        />
-      </View> */}
       {isAllProduct ? renderAllProducts() : renderCategoryProduct()}
     </BackgroundView>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    backgroundColor: COLORS.backgroundColor,
-    flex: 1,
-  },
-  containerAvatar: {
+  header: {
     margin: 20,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+  containerUser: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   avatar: {
     width: 50,
     height: 50,
     borderRadius: 25,
+    marginRight: 10,
   },
   containerTitle: {
     flexDirection: 'row',

@@ -16,7 +16,7 @@ const HomeTab = () => {
       FavouriteTab: 'favorite',
       ProfileTab: 'person',
     };
-    const color = focused ? COLORS.primary : COLORS.lightBack;
+    const color = focused ? COLORS.secondary : COLORS.lightBack;
 
     return (
       <View style={styles.tabBarIcon}>

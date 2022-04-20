@@ -2,6 +2,7 @@ const stackName = {
   loginStack: 'LoginStack',
   signupStack: 'SignUpStack',
   homeStack: 'HomeStack',
+  detailStack: 'DetailStack',
 };
 
 const tabName = {

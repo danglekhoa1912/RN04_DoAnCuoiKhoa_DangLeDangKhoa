@@ -4,6 +4,8 @@ import AntIcon from 'react-native-vector-icons/AntDesign';
 
 import {Text} from '../../../components';
 import {COLORS} from '../../../themes';
+import {navigate} from '../../../navigation/NavigationWithoutProp';
+import {stackName} from '../../../configs/NavigationContants';
 
 const CardItem = ({product}) => {
   const [isFavourite, setIsFavourite] = useState(false);
@@ -12,8 +14,13 @@ const CardItem = ({product}) => {
     setIsFavourite(!isFavourite);
   };
 
+  const onPress = () => {
+    navigate(stackName.detailStack, {id: product.id});
+  };
+
   return (
     <TouchableOpacity
+      onPress={onPress}
       style={{
         backgroundColor: COLORS.white,
         width: 160,

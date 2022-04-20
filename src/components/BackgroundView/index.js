@@ -12,13 +12,13 @@ import {COLORS} from '../../themes';
 
 export default class BackgroundView extends Component {
   render() {
-    const {children} = this.props;
+    const {children, style} = this.props;
     return (
       <KeyboardAvoidingView
         style={{flex: 1}}
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <SafeAreaView style={styles.container} {...this.props}>
+          <SafeAreaView style={[styles.container, style]}>
             <StatusBar barStyle="light-content" />
             {children}
           </SafeAreaView>

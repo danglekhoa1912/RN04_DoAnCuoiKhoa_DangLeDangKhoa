@@ -19,6 +19,10 @@ const RoorNavigation = () => {
         name={stackName.signupStack}
         component={Screens.SignUpScreen}
       />
+      <Stack.Screen
+        name={stackName.detailStack}
+        component={Screens.DetailScreen}
+      />
     </Stack.Navigator>
   );
 };
