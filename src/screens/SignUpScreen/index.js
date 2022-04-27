@@ -1,22 +1,26 @@
-import {
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Keyboard,
-  Image,
-  View,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, Image, View, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {Input, Radio, RadioGroup} from '@ui-kitten/components';
+import {Radio, RadioGroup} from '@ui-kitten/components';
+import {Formik} from 'formik';
+import * as Yup from 'yup';
 
 import {SignUp} from '../../assets';
 import {BackgroundView, Text} from '../../components';
 import {COLORS} from '../../themes';
+import TextInput from '../../components/TextInput';
+
+const validationSchema = Yup.object().shape({
+  email: Yup.string()
+    .required('Không được bỏ trống')
+    .email('Email không hợp lệ'),
+  password: Yup.string().required('Không được bỏ trống'),
+  name: Yup.string().required('Không được bỏ trống'),
+  phone: Yup.string().required('Không được bỏ trống'),
+});
 
 const SignUpScreen = () => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
 
   const toggleSecureEntry = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -26,7 +30,7 @@ const SignUpScreen = () => {
     <TouchableOpacity>
       <Ionicons
         onPress={toggleSecureEntry}
-        color={COLORS.primary}
+        color={COLORS.secondary}
         name={secureTextEntry ? 'eye-off' : 'eye'}
         size={25}
       />
@@ -34,62 +38,110 @@ const SignUpScreen = () => {
   );
 
   const renderIconLeft = name => (
-    <Ionicons size={25} color={COLORS.primary} name={name} />
+    <Ionicons size={25} color={COLORS.secondary} name={name} />
   );
 
+  const handleSubmit = values => {
+    console.log(values);
+  };
+
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <BackgroundView style={styles.container}>
-        <View style={styles.containerImage}>
-          <Image source={SignUp} style={styles.image} />
-        </View>
-        <View style={styles.containerTextInput}>
-          <Input
-            size="large"
-            style={styles.input}
-            placeholder="Email"
-            accessoryLeft={() => renderIconLeft('mail')}
-            keyboardType="email-address"
-          />
-          <Input
-            size="large"
-            style={styles.input}
-            placeholder="Password"
-            accessoryRight={renderIconSecure}
-            secureTextEntry={secureTextEntry}
-            accessoryLeft={() => renderIconLeft('lock-closed')}
-          />
-          <Input
-            size="large"
-            style={styles.input}
-            placeholder="Name"
-            accessoryLeft={() => renderIconLeft('person')}
-          />
-          <Input
-            size="large"
-            style={styles.input}
-            placeholder="Phone"
-            accessoryLeft={() => renderIconLeft('call')}
-            keyboardType="number-pad"
-          />
-          <View style={styles.containerRadioBox}>
-            <Text bold>Gender</Text>
-            <RadioGroup
-              style={{flexDirection: 'row'}}
-              selectedIndex={selectedIndex}
-              onChange={index => setSelectedIndex(index)}>
-              <Radio>Male</Radio>
-              <Radio>Female</Radio>
-            </RadioGroup>
-          </View>
-        </View>
-        <View style={styles.containerButton}>
-          <TouchableOpacity style={styles.button}>
-            <Text bold>Sign Up</Text>
-          </TouchableOpacity>
-        </View>
-      </BackgroundView>
-    </TouchableWithoutFeedback>
+    <BackgroundView style={styles.container}>
+      <View style={styles.containerImage}>
+        <Image source={SignUp} style={styles.image} />
+      </View>
+      <Formik
+        initialValues={{
+          email: '',
+          password: '',
+          name: '',
+          phone: '',
+          gender: 0,
+        }}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema}>
+        {({
+          errors,
+          values,
+          touched,
+          handleChange,
+          handleSubmit,
+          setFieldValue,
+          handleBlur,
+        }) => {
+          console.log(errors);
+          return (
+            <View style={styles.loginForm}>
+              <TextInput
+                size="large"
+                style={styles.input}
+                placeholder="Email"
+                accessoryLeft={() => renderIconLeft('mail')}
+                keyboardType="email-address"
+                value={values.email}
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+                errorMsg={errors.email}
+                touched={touched.email}
+              />
+              <TextInput
+                size="large"
+                style={styles.input}
+                placeholder="Password"
+                accessoryRight={renderIconSecure}
+                secureTextEntry={secureTextEntry}
+                accessoryLeft={() => renderIconLeft('lock-closed')}
+                value={values.password}
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                errorMsg={errors.password}
+                touched={touched.password}
+              />
+              <TextInput
+                size="large"
+                style={styles.input}
+                placeholder="Name"
+                accessoryLeft={() => renderIconLeft('person')}
+                value={values.name}
+                onChangeText={handleChange('name')}
+                onBlur={handleBlur('name')}
+                errorMsg={errors.name}
+                touched={touched.name}
+              />
+              <TextInput
+                size="large"
+                style={styles.input}
+                placeholder="Phone"
+                accessoryLeft={() => renderIconLeft('call')}
+                keyboardType="number-pad"
+                value={values.phone}
+                onChangeText={handleChange('phone')}
+                onBlur={handleBlur('phone')}
+                errorMsg={errors.phone}
+                touched={touched.phone}
+              />
+              <View style={styles.containerRadioBox}>
+                <Text bold>Gender</Text>
+                <RadioGroup
+                  style={{flexDirection: 'row'}}
+                  selectedIndex={values.gender}
+                  onChange={index => {
+                    setFieldValue('gender', index);
+                  }}>
+                  <Radio>Male</Radio>
+                  <Radio>Female</Radio>
+                </RadioGroup>
+              </View>
+              <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                <Text bold style={styles.buttonText}>
+                  Submit
+                </Text>
+              </TouchableOpacity>
+            </View>
+          );
+        }}
+      </Formik>
+    </BackgroundView>
   );
 };
 
@@ -98,43 +150,33 @@ export default SignUpScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.primary,
-    alignItems: 'center',
-    paddingHorizontal: 20,
   },
   containerImage: {
     justifyContent: 'center',
-    marginVertical: 80,
+    alignItems: 'center',
     flex: 1,
   },
   image: {width: 240, height: 170},
-  containerTextInput: {
-    justifyContent: 'space-around',
-    marginVertical: 20,
-    flex: 3,
-  },
-  input: {
-    width: '100%',
-    borderRadius: 10,
-    backgroundColor: COLORS.white,
-  },
+
   containerRadioBox: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  containerButton: {
-    width: '100%',
+  loginForm: {
     flex: 1,
-    justifyContent: 'center',
-    marginBottom: 20,
+    paddingHorizontal: 20,
+    justifyContent: 'space-between',
+    marginBottom: 120,
   },
   button: {
     backgroundColor: COLORS.secondary,
     height: 50,
+    borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 20,
-    borderWidth: 0,
+  },
+  buttonText: {
+    color: '#fff',
   },
 });
