@@ -11,12 +11,12 @@ const RoorNavigation = () => {
   return (
     <Stack.Navigator screenOptions={{headerShown: false}}>
       <Stack.Screen
-        name={stackName.signupStack}
-        component={Screens.SignUpScreen}
-      />
-      <Stack.Screen
         name={stackName.loginStack}
         component={Screens.LoginScreen}
+      />
+      <Stack.Screen
+        name={stackName.signupStack}
+        component={Screens.SignUpScreen}
       />
       <Stack.Screen name={stackName.homeStack} component={HomeTab} />
       <Stack.Screen
