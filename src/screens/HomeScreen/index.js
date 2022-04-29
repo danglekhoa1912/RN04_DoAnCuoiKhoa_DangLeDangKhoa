@@ -17,9 +17,11 @@ import {COLORS} from '../../themes';
 import {BackgroundView, Text} from '../../components/index';
 import CardItem from './CardItem';
 import {requestProfileUser} from '../../redux/thunk/UserActionThunk';
+import {Spinner} from '@ui-kitten/components';
 
 const HomeScreen = props => {
   const [isAllProduct, setIsAllProduct] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [nameCategory, setNameCategory] = useState('ADIDAS');
 
   const profile = useSelector(state => state.UserReducer.profile);
@@ -29,11 +31,16 @@ const HomeScreen = props => {
     state => state.ProductReducer.listCategories,
   );
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(requestListProduct());
     dispatch(requestListCategory());
     dispatch(requestProfileUser(token));
   }, []);
+
+  useEffect(() => {
+    setIsLoading(false);
+  }, [profile]);
 
   const renderListCategory = ({category, id}) => {
     return (
@@ -107,44 +114,52 @@ const HomeScreen = props => {
   };
 
   return (
-    <BackgroundView style={styles.container}>
-      <View style={styles.header}>
-        <View style={styles.containerUser}>
-          <Image style={styles.avatar} source={{uri: profile.avatar}} />
-          <Text bold title>
-            Welcome {profile.name}
-          </Text>
-        </View>
-        <TouchableOpacity>
-          <AntIcon name="shoppingcart" size={30} />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.containerTitle}>
-        <TouchableOpacity
-          onPress={() => {
-            setIsAllProduct(true);
-          }}>
-          <Text
-            color={isAllProduct ? COLORS.lightBack : COLORS.white}
-            bold
-            header>
-            All
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            setIsAllProduct(false);
-          }}>
-          <Text
-            color={!isAllProduct ? COLORS.lightBack : COLORS.white}
-            bold
-            header>
-            Categories
-          </Text>
-        </TouchableOpacity>
-      </View>
-      {isAllProduct ? renderAllProducts() : renderCategoryProduct()}
-    </BackgroundView>
+    <>
+      {isLoading ? (
+        <BackgroundView style={styles.loading}>
+          <Spinner />
+        </BackgroundView>
+      ) : (
+        <BackgroundView style={styles.container}>
+          <View style={styles.header}>
+            <View style={styles.containerUser}>
+              <Image style={styles.avatar} source={{uri: profile.avatar}} />
+              <Text bold title>
+                Welcome {profile.name}
+              </Text>
+            </View>
+            <TouchableOpacity>
+              <AntIcon name="shoppingcart" size={30} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.containerTitle}>
+            <TouchableOpacity
+              onPress={() => {
+                setIsAllProduct(true);
+              }}>
+              <Text
+                color={isAllProduct ? COLORS.lightBack : COLORS.white}
+                bold
+                header>
+                All
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => {
+                setIsAllProduct(false);
+              }}>
+              <Text
+                color={!isAllProduct ? COLORS.lightBack : COLORS.white}
+                bold
+                header>
+                Categories
+              </Text>
+            </TouchableOpacity>
+          </View>
+          {isAllProduct ? renderAllProducts() : renderCategoryProduct()}
+        </BackgroundView>
+      )}
+    </>
   );
 };
 
@@ -154,6 +169,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+  loading: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   containerUser: {
     flexDirection: 'row',

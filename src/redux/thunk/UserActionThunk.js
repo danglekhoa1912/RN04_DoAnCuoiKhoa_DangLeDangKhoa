@@ -22,8 +22,8 @@ export const requestLoginUser = (email, password) => {
         },
       });
       Toast.show('Đăng nhập thành công', Toast.LONG);
-      navigate(stackName.homeStack);
       dispatch(requestLoginUserSuccess(response.data.content.accessToken));
+      navigate(stackName.homeStack);
     } catch (e) {
       if (e.message.includes('404'))
         Toast.show('Sai email hoặc mật khẩu!', Toast.LONG);
@@ -42,6 +42,7 @@ export const requestProfileUser = token => {
         url: 'http://svcy3.myclass.vn/api/Users/getProfile',
         headers: {Authorization: `Bearer ${token}`},
       });
+      console.log(response.data);
       dispatch(requestProfiledUserSuccess(response.data.content));
     } catch (e) {
       console.log(e);

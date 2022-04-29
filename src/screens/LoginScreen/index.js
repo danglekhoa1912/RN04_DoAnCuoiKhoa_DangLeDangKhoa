@@ -56,10 +56,6 @@ const LoginScreen = () => {
     dispatch(requestLoginUser(email, password));
   };
 
-  // useEffect(() => {
-  //   setIsLoading(false);
-  // }, [handleSubmit]);
-
   return (
     <BackgroundView style={styles.container}>
       <View style={styles.containerImage}>
