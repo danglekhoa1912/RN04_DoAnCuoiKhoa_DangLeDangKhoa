@@ -1,7 +1,36 @@
+import {
+  REQUEST_LOGIN_USER_FAIL,
+  REQUEST_LOGIN_USER_SUCCESS,
+  REQUEST_PROFILED_USER_FAIL,
+  REQUEST_PROFILED_USER_SUCCESS,
+} from '../actions/UserAction';
+
 const initialState = {
-  name: 'khoa',
+  token: '',
+  profile: {
+    ordersHistory: [],
+    email: '',
+    name: '',
+    password: '',
+    gender: false,
+    phone: '',
+    facebookId: '',
+    deleted: false,
+    avatar: '',
+  },
 };
 
 export default (state = initialState, {type, payload}) => {
-  return state;
+  switch (type) {
+    case REQUEST_LOGIN_USER_SUCCESS:
+      return {...state, token: payload};
+    case REQUEST_LOGIN_USER_FAIL:
+      return {...state, token: payload};
+    case REQUEST_PROFILED_USER_SUCCESS:
+      return {...state, profile: payload};
+    case REQUEST_PROFILED_USER_FAIL:
+      return {...state, profile: payload};
+    default:
+      return state;
+  }
 };

@@ -1,17 +1,32 @@
 import {StyleSheet, View, Image, TouchableOpacity} from 'react-native';
-import React from 'react';
+import React, {useEffect} from 'react';
 import {useState} from 'react';
+import * as Yup from 'yup';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {Input} from '@ui-kitten/components';
+import {Formik} from 'formik';
 
 import {BackgroundView, Text} from '../../components';
 import {Facebook, Logo} from '../../assets';
 import {COLORS} from '../../themes';
 import {navigate} from '../../navigation/NavigationWithoutProp';
 import {stackName} from '../../configs/NavigationContants';
+import TextInput from '../../components/TextInput';
+import {Spinner} from '@ui-kitten/components';
+import {useDispatch, useSelector} from 'react-redux';
+import {requestLoginUser} from '../../redux/thunk/UserActionThunk';
 
-const StartScreen = () => {
+const validationSchema = Yup.object().shape({
+  email: Yup.string()
+    .required('Không được bỏ trống')
+    .email('Email không hợp lệ'),
+  password: Yup.string().required('Không được bỏ trống'),
+});
+
+const LoginScreen = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+
+  const dispatch = useDispatch();
 
   const toggleSecureEntry = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -21,7 +36,7 @@ const StartScreen = () => {
     <TouchableOpacity>
       <Ionicons
         onPress={toggleSecureEntry}
-        color={COLORS.primary}
+        color={COLORS.secondary}
         name={secureTextEntry ? 'eye-off' : 'eye'}
         size={25}
       />
@@ -33,89 +48,114 @@ const StartScreen = () => {
   };
 
   const renderIconLeft = name => (
-    <Ionicons size={25} color={COLORS.primary} name={name} />
+    <Ionicons size={25} color={COLORS.secondary} name={name} />
   );
+
+  const handleSubmit = async ({email, password}) => {
+    // setIsLoading(true);
+    dispatch(requestLoginUser(email, password));
+  };
+
+  // useEffect(() => {
+  //   setIsLoading(false);
+  // }, [handleSubmit]);
 
   return (
     <BackgroundView style={styles.container}>
       <View style={styles.containerImage}>
         <Image source={Logo} style={styles.image} />
       </View>
-      <View style={styles.containerTextInput}>
-        <Input
-          size="large"
-          style={styles.input}
-          placeholder="Email"
-          accessoryLeft={() => renderIconLeft('mail')}
-        />
-        <Input
-          size="large"
-          style={styles.input}
-          placeholder="Password"
-          accessoryRight={renderIconSecure}
-          secureTextEntry={secureTextEntry}
-          accessoryLeft={() => renderIconLeft('lock-closed')}
-        />
-        <View style={styles.containerOption}>
-          <TouchableOpacity onPress={navigateSignUp}>
-            <Text bold>Sign Up</Text>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Text bold style={{color: 'black'}}>
-              Forgot Password ?
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-      <View style={styles.containerButton}>
-        <TouchableOpacity style={styles.button}>
-          <Text bold>Login</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.containerButtonFace}>
-        <TouchableOpacity style={styles.buttonFace}>
-          <Image style={{marginRight: 10}} source={Facebook} />
-          <Text bold>Login With FaceBook</Text>
-        </TouchableOpacity>
-      </View>
+      <Formik
+        initialValues={{
+          email: '',
+          password: '',
+        }}
+        onSubmit={handleSubmit}
+        validationSchema={validationSchema}>
+        {({
+          errors,
+          values,
+          touched,
+          handleChange,
+          handleSubmit,
+          handleBlur,
+        }) => {
+          return (
+            <View style={styles.loginForm}>
+              <TextInput
+                size="large"
+                style={styles.input}
+                placeholder="Email"
+                accessoryLeft={() => renderIconLeft('mail')}
+                keyboardType="email-address"
+                value={values.email}
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+                errorMsg={errors.email}
+                touched={touched.email}
+              />
+              <TextInput
+                size="large"
+                style={styles.input}
+                placeholder="Password"
+                accessoryRight={renderIconSecure}
+                secureTextEntry={secureTextEntry}
+                accessoryLeft={() => renderIconLeft('lock-closed')}
+                value={values.password}
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                errorMsg={errors.password}
+                touched={touched.password}
+              />
+              <View style={styles.containerOption}>
+                <TouchableOpacity onPress={navigateSignUp}>
+                  <Text bold>Sign Up</Text>
+                </TouchableOpacity>
+                <TouchableOpacity>
+                  <Text bold style={{color: 'black'}}>
+                    Forgot Password ?
+                  </Text>
+                </TouchableOpacity>
+              </View>
+              <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                {isLoading ? <Spinner /> : <Text bold>Login</Text>}
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.buttonFace}>
+                <Image style={{marginRight: 10}} source={Facebook} />
+                <Text bold>Login With FaceBook</Text>
+              </TouchableOpacity>
+            </View>
+          );
+        }}
+      </Formik>
     </BackgroundView>
   );
 };
 
-export default StartScreen;
+export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.primary,
-    alignItems: 'center',
-    paddingHorizontal: 20,
   },
   containerImage: {
     justifyContent: 'center',
-    flex: 3,
+    alignItems: 'center',
+    flex: 1,
   },
   image: {width: 200, height: 200},
-  containerTextInput: {
-    justifyContent: 'space-around',
-    marginVertical: 20,
-    flex: 1.5,
+  loginForm: {
+    flex: 1,
+    paddingHorizontal: 20,
+    justifyContent: 'space-between',
+    marginBottom: 120,
   },
-  input: {
-    width: '100%',
-    borderRadius: 10,
-    backgroundColor: COLORS.white,
-  },
+
   containerOption: {
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
 
-  containerButton: {
-    width: '100%',
-    flex: 0.5,
-    justifyContent: 'center',
-  },
   button: {
     backgroundColor: COLORS.secondary,
     height: 50,
@@ -123,10 +163,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderRadius: 20,
     borderWidth: 0,
-  },
-  containerButtonFace: {
-    flex: 1,
-    paddingTop: 20,
   },
   buttonFace: {
     flexDirection: 'row',

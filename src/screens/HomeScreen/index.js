@@ -15,13 +15,15 @@ import {
 } from '../../redux/thunk/ProductActionThunk';
 import {COLORS} from '../../themes';
 import {BackgroundView, Text} from '../../components/index';
-import {Avatar} from '../../assets';
 import CardItem from './CardItem';
+import {requestProfileUser} from '../../redux/thunk/UserActionThunk';
 
-const HomeScreen = () => {
+const HomeScreen = props => {
   const [isAllProduct, setIsAllProduct] = useState(true);
   const [nameCategory, setNameCategory] = useState('ADIDAS');
 
+  const profile = useSelector(state => state.UserReducer.profile);
+  const token = useSelector(state => state.UserReducer.token);
   const listProduct = useSelector(state => state.ProductReducer.listProducts);
   const listCategory = useSelector(
     state => state.ProductReducer.listCategories,
@@ -30,6 +32,7 @@ const HomeScreen = () => {
   useEffect(() => {
     dispatch(requestListProduct());
     dispatch(requestListCategory());
+    dispatch(requestProfileUser(token));
   }, []);
 
   const renderListCategory = ({category, id}) => {
@@ -107,9 +110,9 @@ const HomeScreen = () => {
     <BackgroundView style={styles.container}>
       <View style={styles.header}>
         <View style={styles.containerUser}>
-          <Image style={styles.avatar} source={Avatar} />
+          <Image style={styles.avatar} source={{uri: profile.avatar}} />
           <Text bold title>
-            Welcome Name...
+            Welcome {profile.name}
           </Text>
         </View>
         <TouchableOpacity>

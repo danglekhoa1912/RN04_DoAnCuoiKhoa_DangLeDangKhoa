@@ -1,26 +1,38 @@
 import {StyleSheet, Image, View, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {Radio, RadioGroup} from '@ui-kitten/components';
+import {Radio, RadioGroup, Spinner} from '@ui-kitten/components';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
+import {useDispatch, useSelector} from 'react-redux';
+import Toast from 'react-native-simple-toast';
 
+import User from '../../models/User';
 import {SignUp} from '../../assets';
 import {BackgroundView, Text} from '../../components';
 import {COLORS} from '../../themes';
 import TextInput from '../../components/TextInput';
+import {requestSignupUser} from '../../redux/thunk/UserActionThunk';
+import {stackName} from '../../configs/NavigationContants';
+import {navigate} from '../../navigation/NavigationWithoutProp';
+import axios from 'axios';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
     .required('Không được bỏ trống')
     .email('Email không hợp lệ'),
-  password: Yup.string().required('Không được bỏ trống'),
+  password: Yup.string()
+    .required('Không được bỏ trống')
+    .min(8, ({min}) => `Password phải có ít nhất ${min} kí tự`),
   name: Yup.string().required('Không được bỏ trống'),
-  phone: Yup.string().required('Không được bỏ trống'),
+  phone: Yup.string()
+    .required('Không được bỏ trống')
+    .min(10, ({min}) => `Phone number phải có đủ ${min} kí tự`),
 });
 
 const SignUpScreen = () => {
   const [secureTextEntry, setSecureTextEntry] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const toggleSecureEntry = () => {
     setSecureTextEntry(!secureTextEntry);
@@ -41,8 +53,39 @@ const SignUpScreen = () => {
     <Ionicons size={25} color={COLORS.secondary} name={name} />
   );
 
-  const handleSubmit = values => {
-    console.log(values);
+  // const handleSubmit = ({email, password, name, phone, gender}) => {
+  //   dispatch(requestSignupUser(new User(email, password, phone, name, gender)));
+  //   if (isSignup.isSuccess) {
+  //     Toast.show(isSignup.message, Toast.LONG);
+  //     navigate(stackName.loginStack);
+  //   } else {
+  //     Toast.show('Email đã được sử dụng', Toast.LONG);
+  //   }
+  // };
+
+  const handleSubmit = async ({email, password, name, phone, gender}) => {
+    setIsLoading(true);
+    console.log(isLoading);
+    try {
+      const response = await axios({
+        method: 'POST',
+        url: 'http://svcy3.myclass.vn/api/Users/signup',
+        data: {
+          email: email,
+          password: password,
+          name: name,
+          phone: phone,
+          gender: gender,
+        },
+      });
+      Toast.show('Đăng ký tài khoản thành công!', Toast.LONG);
+      setIsLoading(false);
+      navigate(stackName.loginStack);
+    } catch (e) {
+      if (e.message.includes('400'))
+        Toast.show('Email đã được sử dụng!', Toast.LONG);
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -69,7 +112,6 @@ const SignUpScreen = () => {
           setFieldValue,
           handleBlur,
         }) => {
-          console.log(errors);
           return (
             <View style={styles.loginForm}>
               <TextInput
@@ -133,9 +175,13 @@ const SignUpScreen = () => {
                 </RadioGroup>
               </View>
               <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                <Text bold style={styles.buttonText}>
-                  Submit
-                </Text>
+                {isLoading ? (
+                  <Spinner />
+                ) : (
+                  <Text bold style={styles.buttonText}>
+                    Submit
+                  </Text>
+                )}
               </TouchableOpacity>
             </View>
           );
