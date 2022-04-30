@@ -1,6 +1,7 @@
 import {
   REQUEST_LOGIN_USER_FAIL,
   REQUEST_LOGIN_USER_SUCCESS,
+  REQUEST_PRODUCT_FAVORITES_SUCCESS,
   REQUEST_PROFILED_USER_FAIL,
   REQUEST_PROFILED_USER_SUCCESS,
 } from '../actions/UserAction';
@@ -18,6 +19,7 @@ const initialState = {
     deleted: false,
     avatar: '',
   },
+  listProductFavorites: [],
 };
 
 export default (state = initialState, {type, payload}) => {
@@ -30,6 +32,8 @@ export default (state = initialState, {type, payload}) => {
       return {...state, profile: payload};
     case REQUEST_PROFILED_USER_FAIL:
       return {...state, profile: payload};
+    case REQUEST_PRODUCT_FAVORITES_SUCCESS:
+      return {...state, listProductFavorites: payload};
     default:
       return state;
   }

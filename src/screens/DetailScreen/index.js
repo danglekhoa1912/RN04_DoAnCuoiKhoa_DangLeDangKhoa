@@ -63,54 +63,54 @@ const DetailScreen = props => {
           <View style={styles.containerImage}>
             <Image style={styles.image} source={{uri: product.image}} />
           </View>
-          <ScrollView
-            showsVerticalScrollIndicator={false}
-            style={styles.containerDescription}>
-            <Text bold title>
-              Description
-            </Text>
-            <Text bold color={COLORS.gray} content>
-              {product.description}
-            </Text>
-            <Text content bold>
-              Price: <Text color={COLORS.secondary}>$</Text>
-              {product.price}
-            </Text>
-            <View style={styles.containerOption}>
-              <View style={styles.selectOption}>
-                <Text subText bold title>
-                  Size
-                </Text>
-                <Select
-                  status="control"
-                  value={product.size[selectedIndex.row]}
-                  selectedIndex={selectedIndex}
-                  style={styles.select}
-                  onSelect={index => setSelectedIndex(index)}>
-                  {product.size.map(renderListSize)}
-                </Select>
+          <ScrollView style={styles.containerDescription}>
+            <View style={{marginHorizontal: 20, marginBottom: 10, flex: 1}}>
+              <Text bold title>
+                Description
+              </Text>
+              <Text bold color={COLORS.gray} content>
+                {product.description}
+              </Text>
+              <Text style={{paddingVertical: 10}} content bold>
+                Price: <Text color={COLORS.secondary}>$</Text>
+                {product.price}
+              </Text>
+              <View style={styles.containerOption}>
+                <View style={styles.selectOption}>
+                  <Text subText bold title>
+                    Size
+                  </Text>
+                  <Select
+                    status="control"
+                    value={product.size[selectedIndex.row]}
+                    selectedIndex={selectedIndex}
+                    style={styles.select}
+                    onSelect={index => setSelectedIndex(index)}>
+                    {product.size.map(renderListSize)}
+                  </Select>
+                </View>
+                <View style={styles.selectOption}>
+                  <Text subText bold title>
+                    QTY
+                  </Text>
+                  <Select
+                    status="control"
+                    value={product.size[selectedIndex.row]}
+                    selectedIndex={selectedIndex}
+                    style={styles.select}
+                    onSelect={index => setSelectedIndex(index)}>
+                    {product.size.map(renderListSize)}
+                  </Select>
+                </View>
               </View>
-              <View style={styles.selectOption}>
-                <Text subText bold title>
-                  QTY
-                </Text>
-                <Select
-                  status="control"
-                  value={product.size[selectedIndex.row]}
-                  selectedIndex={selectedIndex}
-                  style={styles.select}
-                  onSelect={index => setSelectedIndex(index)}>
-                  {product.size.map(renderListSize)}
-                </Select>
+              <View style={styles.containerButtonAdd}>
+                <TouchableOpacity style={styles.buttonAdd}>
+                  <Text title bold color={COLORS.white}>
+                    Add to cart
+                  </Text>
+                  <AntIcon name="shoppingcart" size={30} color={COLORS.white} />
+                </TouchableOpacity>
               </View>
-            </View>
-            <View style={styles.containerButtonAdd}>
-              <TouchableOpacity style={styles.buttonAdd}>
-                <Text title bold color={COLORS.white}>
-                  Add to cart
-                </Text>
-                <AntIcon name="shoppingcart" size={30} color={COLORS.white} />
-              </TouchableOpacity>
             </View>
           </ScrollView>
         </BackgroundView>
@@ -124,6 +124,7 @@ export default DetailScreen;
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
+    flex: 1,
   },
   loading: {
     justifyContent: 'center',
@@ -146,8 +147,8 @@ const styles = StyleSheet.create({
     flex: 1,
     marginHorizontal: -20,
     borderTopRightRadius: 30,
-    padding: 20,
     borderTopLeftRadius: 30,
+    paddingTop: 10,
   },
   containerOption: {
     backgroundColor: COLORS.lighhtBlue,

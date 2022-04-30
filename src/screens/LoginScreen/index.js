@@ -12,7 +12,7 @@ import {navigate} from '../../navigation/NavigationWithoutProp';
 import {stackName} from '../../configs/NavigationContants';
 import TextInput from '../../components/TextInput';
 import {Spinner} from '@ui-kitten/components';
-import {useDispatch, useSelector} from 'react-redux';
+import {useDispatch} from 'react-redux';
 import {requestLoginUser} from '../../redux/thunk/UserActionThunk';
 
 const validationSchema = Yup.object().shape({
@@ -31,6 +31,12 @@ const LoginScreen = () => {
   const toggleSecureEntry = () => {
     setSecureTextEntry(!secureTextEntry);
   };
+
+  useEffect(() => {
+    return () => {
+      setIsLoading(false);
+    };
+  });
 
   const renderIconSecure = () => (
     <TouchableOpacity>
@@ -51,9 +57,11 @@ const LoginScreen = () => {
     <Ionicons size={25} color={COLORS.secondary} name={name} />
   );
 
-  const handleSubmit = async ({email, password}) => {
-    // setIsLoading(true);
-    dispatch(requestLoginUser(email, password));
+  const handleSubmit = ({email, password}) => {
+    setIsLoading(true);
+    dispatch(requestLoginUser(email, password)).then(() => {
+      setIsLoading(false);
+    });
   };
 
   return (
@@ -80,7 +88,6 @@ const LoginScreen = () => {
             <View style={styles.loginForm}>
               <TextInput
                 size="large"
-                style={styles.input}
                 placeholder="Email"
                 accessoryLeft={() => renderIconLeft('mail')}
                 keyboardType="email-address"
@@ -92,7 +99,6 @@ const LoginScreen = () => {
               />
               <TextInput
                 size="large"
-                style={styles.input}
                 placeholder="Password"
                 accessoryRight={renderIconSecure}
                 secureTextEntry={secureTextEntry}

@@ -5,6 +5,7 @@ import {
   Platform,
   TouchableWithoutFeedback,
   Keyboard,
+  ScrollView,
 } from 'react-native';
 import React, {Component} from 'react';
 import {SafeAreaView} from 'react-native-safe-area-context';

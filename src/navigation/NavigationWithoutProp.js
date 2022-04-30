@@ -1,4 +1,7 @@
-import {createNavigationContainerRef} from '@react-navigation/native';
+import {
+  createNavigationContainerRef,
+  StackActions,
+} from '@react-navigation/native';
 
 export const navigationRef = createNavigationContainerRef();
 
@@ -13,7 +16,13 @@ const NavigationWithoutProp = {
       navigationRef.goBack();
     }
   },
+  replace: (screenName, param) => {
+    if (navigationRef.isReady()) {
+      navigationRef.dispatch(StackActions.replace(screenName, param));
+    }
+  },
 };
 
 export const navigate = NavigationWithoutProp.navigate;
 export const goBack = NavigationWithoutProp.goBack;
+export const replace = NavigationWithoutProp.replace;

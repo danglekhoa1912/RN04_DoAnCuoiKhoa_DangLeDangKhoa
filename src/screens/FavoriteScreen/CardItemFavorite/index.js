@@ -12,14 +12,11 @@ import {
   requestUnLikeProduct,
 } from '../../../redux/thunk/UserActionThunk';
 
-const CardItem = ({product, favorite}) => {
-  const [isFavourite, setIsFavourite] = useState(favorite);
+const CardItemFavorite = ({product, favorite}) => {
+  const [isFavourite, setIsFavourite] = useState(true);
+
   const token = useSelector(state => state.UserReducer.token);
   const dispatch = useDispatch();
-
-  useEffect(() => {
-    setIsFavourite(favorite);
-  }, [favorite]);
 
   const handleFavourite = () => {
     setIsFavourite(!isFavourite);
@@ -34,7 +31,13 @@ const CardItem = ({product, favorite}) => {
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
       <View style={styles.containerHeader}>
-        <Text bold>${product.price}</Text>
+        <View style={styles.containerProduct}>
+          <Image
+            source={{uri: product.image}}
+            style={{width: 150, height: 100}}
+          />
+          <Text bold>{product.name}</Text>
+        </View>
         <TouchableOpacity onPress={handleFavourite}>
           <AntIcon
             name={isFavourite ? 'heart' : 'hearto'}
@@ -43,26 +46,16 @@ const CardItem = ({product, favorite}) => {
           />
         </TouchableOpacity>
       </View>
-      <View style={styles.containerImage}>
-        <Image
-          source={{uri: product.image}}
-          style={{width: 150, height: 130}}
-        />
-      </View>
-      <View style={styles.containerName}>
-        <Text bold>{product.name}</Text>
-      </View>
     </TouchableOpacity>
   );
 };
 
-export default CardItem;
+export default CardItemFavorite;
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.white,
-    width: 160,
-    height: 200,
+    height: 100,
     borderRadius: 15,
     padding: 10,
     shadowOffset: {
@@ -75,11 +68,11 @@ const styles = StyleSheet.create({
   },
   containerHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'space-around',
   },
-  containerImage: {
+  containerProduct: {
     justifyContent: 'center',
     alignItems: 'center',
+    flexDirection: 'row',
   },
-  containerName: {justifyContent: 'center', alignItems: 'center'},
 });

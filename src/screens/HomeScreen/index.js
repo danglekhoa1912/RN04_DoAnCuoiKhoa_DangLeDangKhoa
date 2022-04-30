@@ -4,10 +4,12 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  RefreshControl,
 } from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import {Spinner} from '@ui-kitten/components';
 
 import {
   requestListCategory,
@@ -16,13 +18,17 @@ import {
 import {COLORS} from '../../themes';
 import {BackgroundView, Text} from '../../components/index';
 import CardItem from './CardItem';
-import {requestProfileUser} from '../../redux/thunk/UserActionThunk';
-import {Spinner} from '@ui-kitten/components';
+import {
+  requestProductFavorites,
+  requestProfileUser,
+} from '../../redux/thunk/UserActionThunk';
+import {Avatar} from '../../assets';
 
 const HomeScreen = props => {
   const [isAllProduct, setIsAllProduct] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [nameCategory, setNameCategory] = useState('ADIDAS');
+  const [refreshing, setRefreshing] = useState(false);
 
   const profile = useSelector(state => state.UserReducer.profile);
   const token = useSelector(state => state.UserReducer.token);
@@ -30,17 +36,32 @@ const HomeScreen = props => {
   const listCategory = useSelector(
     state => state.ProductReducer.listCategories,
   );
-  const dispatch = useDispatch();
+  const listProductFavorites = useSelector(
+    state => state.UserReducer.listProductFavorites,
+  );
 
+  const avatar = profile.avatar ? {uri: profile.avatar} : {Avatar};
+  const dispatch = useDispatch();
   useEffect(() => {
-    dispatch(requestListProduct());
-    dispatch(requestListCategory());
-    dispatch(requestProfileUser(token));
+    Promise.all([
+      dispatch(requestListProduct()),
+      dispatch(requestListCategory()),
+      dispatch(requestProfileUser(token)),
+      dispatch(requestProductFavorites(token)),
+    ]).then(() => {
+      setIsLoading(false);
+    });
   }, []);
 
-  useEffect(() => {
-    setIsLoading(false);
-  }, [profile]);
+  const isFavourite = id => {
+    return listProductFavorites.some(item => item.id === id);
+  };
+
+  const onRefresh = () => {
+    dispatch(requestProductFavorites(token)).then(() => {
+      setRefreshing(false);
+    });
+  };
 
   const renderListCategory = ({category, id}) => {
     return (
@@ -48,7 +69,7 @@ const HomeScreen = props => {
         onPress={() => {
           setNameCategory(id);
         }}>
-        <Text color={nameCategory == id ? COLORS.lightBack : COLORS.white}>
+        <Text color={nameCategory == id ? COLORS.lightBack : COLORS.gray}>
           {category}
         </Text>
       </TouchableOpacity>
@@ -61,15 +82,20 @@ const HomeScreen = props => {
         <FlatList
           numColumns={2}
           data={listProduct}
-          renderItem={({item}) => <CardItem product={item} />}
+          renderItem={({item}) => (
+            <CardItem favorite={isFavourite(item.id)} product={item} />
+          )}
           ItemSeparatorComponent={() => <View style={{height: 30}} />}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
-            paddingBottom: 300,
+            paddingBottom: 250,
             flexDirection: 'column',
             paddingTop: 15,
           }}
           columnWrapperStyle={{flex: 1, justifyContent: 'space-between'}}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
         />
       </View>
     );
@@ -99,14 +125,19 @@ const HomeScreen = props => {
           <FlatList
             numColumns={2}
             data={listProductCategory}
-            renderItem={({item}) => <CardItem product={item} />}
+            renderItem={({item}) => (
+              <CardItem favorite={isFavourite(item.id)} product={item} />
+            )}
             ItemSeparatorComponent={() => <View style={{height: 30}} />}
             showsVerticalScrollIndicator={false}
             contentContainerStyle={{
-              paddingBottom: 380,
+              paddingBottom: 320,
               flexDirection: 'column',
             }}
             columnWrapperStyle={{flex: 1, justifyContent: 'space-between'}}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
           />
         </View>
       </View>
@@ -123,7 +154,7 @@ const HomeScreen = props => {
         <BackgroundView style={styles.container}>
           <View style={styles.header}>
             <View style={styles.containerUser}>
-              <Image style={styles.avatar} source={{uri: profile.avatar}} />
+              <Image style={styles.avatar} source={avatar} />
               <Text bold title>
                 Welcome {profile.name}
               </Text>
@@ -138,7 +169,7 @@ const HomeScreen = props => {
                 setIsAllProduct(true);
               }}>
               <Text
-                color={isAllProduct ? COLORS.lightBack : COLORS.white}
+                color={isAllProduct ? COLORS.lightBack : COLORS.gray}
                 bold
                 header>
                 All
@@ -149,7 +180,7 @@ const HomeScreen = props => {
                 setIsAllProduct(false);
               }}>
               <Text
-                color={!isAllProduct ? COLORS.lightBack : COLORS.white}
+                color={!isAllProduct ? COLORS.lightBack : COLORS.gray}
                 bold
                 header>
                 Categories

@@ -4,17 +4,14 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Radio, RadioGroup, Spinner} from '@ui-kitten/components';
 import {Formik} from 'formik';
 import * as Yup from 'yup';
-import {useDispatch, useSelector} from 'react-redux';
 import Toast from 'react-native-simple-toast';
 
-import User from '../../models/User';
 import {SignUp} from '../../assets';
 import {BackgroundView, Text} from '../../components';
 import {COLORS} from '../../themes';
 import TextInput from '../../components/TextInput';
-import {requestSignupUser} from '../../redux/thunk/UserActionThunk';
 import {stackName} from '../../configs/NavigationContants';
-import {navigate} from '../../navigation/NavigationWithoutProp';
+import {goBack} from '../../navigation/NavigationWithoutProp';
 import axios from 'axios';
 
 const validationSchema = Yup.object().shape({
@@ -65,7 +62,6 @@ const SignUpScreen = () => {
 
   const handleSubmit = async ({email, password, name, phone, gender}) => {
     setIsLoading(true);
-    console.log(isLoading);
     try {
       const response = await axios({
         method: 'POST',
@@ -80,7 +76,7 @@ const SignUpScreen = () => {
       });
       Toast.show('Đăng ký tài khoản thành công!', Toast.LONG);
       setIsLoading(false);
-      navigate(stackName.loginStack);
+      goBack(stackName.loginStack);
     } catch (e) {
       if (e.message.includes('400'))
         Toast.show('Email đã được sử dụng!', Toast.LONG);
@@ -116,7 +112,6 @@ const SignUpScreen = () => {
             <View style={styles.loginForm}>
               <TextInput
                 size="large"
-                style={styles.input}
                 placeholder="Email"
                 accessoryLeft={() => renderIconLeft('mail')}
                 keyboardType="email-address"
@@ -128,7 +123,6 @@ const SignUpScreen = () => {
               />
               <TextInput
                 size="large"
-                style={styles.input}
                 placeholder="Password"
                 accessoryRight={renderIconSecure}
                 secureTextEntry={secureTextEntry}
@@ -141,7 +135,6 @@ const SignUpScreen = () => {
               />
               <TextInput
                 size="large"
-                style={styles.input}
                 placeholder="Name"
                 accessoryLeft={() => renderIconLeft('person')}
                 value={values.name}
@@ -152,7 +145,6 @@ const SignUpScreen = () => {
               />
               <TextInput
                 size="large"
-                style={styles.input}
                 placeholder="Phone"
                 accessoryLeft={() => renderIconLeft('call')}
                 keyboardType="number-pad"
