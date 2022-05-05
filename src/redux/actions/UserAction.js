@@ -9,6 +9,19 @@ export const REQUEST_LIKE_PRODUCT_SUCCESS = 'REQUEST_LIKE_PRODUCT_SUCCESS';
 export const REQUEST_LIKE_PRODUCT_FAIL = 'REQUEST_LIKE_PRODUCT_FAIL';
 export const REQUEST_UNLIKE_PRODUCT_SUCCESS = 'REQUEST_UNLIKE_PRODUCT_SUCCESS';
 export const REQUEST_UNLIKE_PRODUCT_FAIL = 'REQUEST_UNLIKE_PRODUCT_FAIL';
+export const REQUEST_EDIT_PROFILE_SUCCESS = 'REQUEST_EDIT_PROFILE_SUCCESS';
+export const REQUEST_EDIT_PROFILE_FAIL = 'REQUEST_EDIT_PROFILE_FAIL';
+export const REQUEST_CHANGE_PASSWORD_SUCCESS =
+  'REQUEST_CHANGE_PASSWORD_SUCCESS';
+export const REQUEST_CHANGE_PASSWORD_FAIL = 'REQUEST_CHANGE_PASSWORD_FAIL';
+export const ADD_PRODUCT_TO_CART = 'ADD_PRODUCT_TO_CART';
+export const REMOVE_PRODUCT_TO_CART = 'REMOVE_PRODUCT_TO_CART';
+export const CHANGE_QUANTITY_PRODUCT_IN_CART =
+  'CHANGE_QUANTITY_PRODUCT_IN_CART';
+export const REQUEST_ADD_ORDER_SUCCESS = 'REQUEST_ADD_ORDER_SUCCESS';
+export const REQUEST_ADD_ORDER_FAIL = 'REQUEST_ADD_ORDER_FAIL';
+export const REQUEST_REMOVE_ORDER_SUCCESS = 'REQUEST_REMOVE_ORDER_SUCCESS';
+export const REQUEST_REMOVE_ORDER_FAIL = 'REQUEST_REMOVE_ORDER_FAIL';
 
 export const requestLoginUserSuccess = payload => ({
   type: REQUEST_LOGIN_USER_SUCCESS,
@@ -58,4 +71,43 @@ export const requestUnLikeProductSuccess = payload => ({
 export const requestUnLikeProductFail = payload => ({
   type: REQUEST_UNLIKE_PRODUCT_FAIL,
   payload,
+});
+
+export const requetsEditProfileSuccess = payload => ({
+  type: REQUEST_EDIT_PROFILE_SUCCESS,
+  payload,
+});
+
+export const requetsEditProfileFail = payload => ({
+  type: REQUEST_EDIT_PROFILE_FAIL,
+  payload,
+});
+
+export const requestChangePasswordSuccess = payload => ({
+  type: REQUEST_CHANGE_PASSWORD_SUCCESS,
+  payload,
+});
+
+export const requestChangePasswordFail = payload => ({
+  type: REQUEST_CHANGE_PASSWORD_FAIL,
+  payload,
+});
+
+export const addProductToCartSuccess = (product, size, quantity) => ({
+  type: ADD_PRODUCT_TO_CART,
+  payload: {
+    product,
+    size,
+    quantity,
+  },
+});
+
+export const removeProductToCartSuccess = payload => ({
+  type: REMOVE_PRODUCT_TO_CART,
+  payload,
+});
+
+export const changeQuantityProductInCartSuccess = (quantity, index) => ({
+  type: CHANGE_QUANTITY_PRODUCT_IN_CART,
+  payload: {quantity, index},
 });

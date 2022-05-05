@@ -27,23 +27,32 @@ const FavoriteScreen = () => {
 
   return (
     <BackgroundView style={styles.container}>
-      <View style={styles.containerHeader}>
-        <Text header bold>
-          Favorites
-        </Text>
-      </View>
-      <FlatList
-        data={listProductFavorites}
-        renderItem={({item}) => <CardItemFavorite product={item} />}
-        ItemSeparatorComponent={() => <View style={{height: 30}} />}
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingBottom: 100,
-        }}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      />
+      <RefreshControl refreshing={refreshing} onRefresh={onRefresh}>
+        <View style={styles.containerHeader}>
+          <Text header bold>
+            Favorites
+          </Text>
+        </View>
+        {listProductFavorites.length > 0 ? (
+          <FlatList
+            data={listProductFavorites}
+            renderItem={({item}) => <CardItemFavorite product={item} />}
+            ItemSeparatorComponent={() => <View style={{height: 30}} />}
+            showsVerticalScrollIndicator={false}
+            contentContainerStyle={{
+              paddingBottom: 100,
+            }}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+          />
+        ) : (
+          <View
+            style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text bold>opps bạn chưa có sản phẩm yêu thích nào!</Text>
+          </View>
+        )}
+      </RefreshControl>
     </BackgroundView>
   );
 };

@@ -23,8 +23,10 @@ import {
   requestProfileUser,
 } from '../../redux/thunk/UserActionThunk';
 import {Avatar} from '../../assets';
+import {navigate} from '../../navigation/NavigationWithoutProp';
+import {stackName} from '../../configs/NavigationContants';
 
-const HomeScreen = props => {
+const HomeScreen = () => {
   const [isAllProduct, setIsAllProduct] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const [nameCategory, setNameCategory] = useState('ADIDAS');
@@ -61,6 +63,10 @@ const HomeScreen = props => {
     dispatch(requestProductFavorites(token)).then(() => {
       setRefreshing(false);
     });
+  };
+
+  const onPressCart = () => {
+    navigate(stackName.cartStack);
   };
 
   const renderListCategory = ({category, id}) => {
@@ -159,7 +165,7 @@ const HomeScreen = props => {
                 Welcome {profile.name}
               </Text>
             </View>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onPressCart}>
               <AntIcon name="shoppingcart" size={30} />
             </TouchableOpacity>
           </View>

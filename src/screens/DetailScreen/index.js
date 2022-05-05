@@ -15,6 +15,7 @@ import {goBack} from '../../navigation/NavigationWithoutProp';
 import {useDispatch, useSelector} from 'react-redux';
 import {requestProductDetail} from '../../redux/thunk/ProductActionThunk';
 import {IndexPath, Select, SelectItem, Spinner} from '@ui-kitten/components';
+import {addProductToCart} from '../../redux/thunk/UserActionThunk';
 
 const DetailScreen = props => {
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
@@ -35,6 +36,11 @@ const DetailScreen = props => {
       setIsLoading(false);
     }
   }, [product]);
+
+  const addCart = () => {
+    dispatch(addProductToCart(product, product.size[selectedIndex.row], 1));
+  };
+
   return (
     <>
       {isLoading ? (
@@ -89,28 +95,17 @@ const DetailScreen = props => {
                     {product.size.map(renderListSize)}
                   </Select>
                 </View>
-                <View style={styles.selectOption}>
-                  <Text subText bold title>
-                    QTY
-                  </Text>
-                  <Select
-                    status="control"
-                    value={product.size[selectedIndex.row]}
-                    selectedIndex={selectedIndex}
-                    style={styles.select}
-                    onSelect={index => setSelectedIndex(index)}>
-                    {product.size.map(renderListSize)}
-                  </Select>
-                </View>
               </View>
-              <View style={styles.containerButtonAdd}>
-                <TouchableOpacity style={styles.buttonAdd}>
+              <TouchableOpacity
+                onPress={addCart}
+                style={styles.containerButtonAdd}>
+                <View style={styles.buttonAdd}>
                   <Text title bold color={COLORS.white}>
                     Add to cart
                   </Text>
                   <AntIcon name="shoppingcart" size={30} color={COLORS.white} />
-                </TouchableOpacity>
-              </View>
+                </View>
+              </TouchableOpacity>
             </View>
           </ScrollView>
         </BackgroundView>

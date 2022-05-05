@@ -76,7 +76,7 @@ const SignUpScreen = () => {
       });
       Toast.show('Đăng ký tài khoản thành công!', Toast.LONG);
       setIsLoading(false);
-      goBack(stackName.loginStack);
+      goBack();
     } catch (e) {
       if (e.message.includes('400'))
         Toast.show('Email đã được sử dụng!', Toast.LONG);

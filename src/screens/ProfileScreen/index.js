@@ -3,9 +3,9 @@ import {
   View,
   Image,
   TouchableOpacity,
-  ScrollView,
+  RefreshControl,
 } from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -14,6 +14,7 @@ import {BackgroundView, Text} from '../../components';
 import {requestProfileUser} from '../../redux/thunk/UserActionThunk';
 import {COLORS} from '../../themes';
 import {stackName} from '../../configs/NavigationContants';
+import {navigate, replace} from '../../navigation/NavigationWithoutProp';
 
 const RenderInfor = ({title, infor}) => {
   return (
@@ -26,9 +27,10 @@ const RenderInfor = ({title, infor}) => {
   );
 };
 
-const ProfileScreen = ({navigation}) => {
+const ProfileScreen = () => {
   const profile = useSelector(state => state.UserReducer.profile);
   const token = useSelector(state => state.UserReducer.token);
+  const [refreshing, setRefreshing] = useState(false);
 
   const avatar = profile.avatar ? {uri: profile.avatar} : {Avatar};
 
@@ -37,55 +39,65 @@ const ProfileScreen = ({navigation}) => {
     dispatch(requestProfileUser(token));
   }, []);
 
-  const onLogOut = navigate => {
-    navigation.replace(stackName.loginStack);
+  const onLogOut = () => {
+    replace(stackName.loginStack);
   };
 
-  const onEditProfile = () => {};
+  const onEditProfile = () => {
+    navigate(stackName.editProfileStack);
+  };
+
+  const onRefresh = () => {
+    dispatch(requestProfileUser(token)).then(() => {
+      setRefreshing(false);
+    });
+  };
 
   return (
-    <BackgroundView style={styles.container}>
-      <View style={styles.containerHeader}>
-        <Text header>My Profile</Text>
-      </View>
-      <View style={styles.containerProfile}>
-        <TouchableOpacity style={styles.containerAvatar}>
-          <Image style={styles.avatar} source={avatar} />
-          <View style={styles.icon}>
-            <AntDesign color={COLORS.white} size={15} name="edit" />
+    <RefreshControl
+      style={{flex: 1}}
+      refreshing={refreshing}
+      onRefresh={onRefresh}>
+      <BackgroundView style={styles.container}>
+        <View style={styles.containerHeader}>
+          <Text header>My Profile</Text>
+        </View>
+        <View style={styles.containerProfile}>
+          <View style={styles.containerAvatar}>
+            <Image style={styles.avatar} source={avatar} />
           </View>
-        </TouchableOpacity>
-        <Text bold style={{fontSize: 35}}>
-          {profile.name}
-        </Text>
-      </View>
-      <View style={styles.containerInput}>
-        <RenderInfor infor={profile.email} title="Email" />
-        <RenderInfor infor={profile.name} title="Name" />
-        <RenderInfor infor={profile.phone} title="Phone" />
-        <RenderInfor
-          infor={profile.gender ? 'Female' : 'Male'}
-          title="Gender"
-        />
+          <Text bold style={{fontSize: 35}}>
+            {profile.name}
+          </Text>
+        </View>
+        <View style={styles.containerInput}>
+          <RenderInfor infor={profile.email} title="Email" />
+          <RenderInfor infor={profile.name} title="Name" />
+          <RenderInfor infor={profile.phone} title="Phone" />
+          <RenderInfor
+            infor={profile.gender ? 'Female' : 'Male'}
+            title="Gender"
+          />
 
-        <View style={styles.containerButton}>
-          <TouchableOpacity onPress={onEditProfile} style={styles.button}>
-            <Text>Edit Profile</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button}>
-            <Text>Change Password</Text>
+          <View style={styles.containerButton}>
+            <TouchableOpacity onPress={onEditProfile} style={styles.button}>
+              <Text>Edit Profile</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.button}>
+              <Text>Change Password</Text>
+            </TouchableOpacity>
+          </View>
+          <TouchableOpacity
+            onPress={onLogOut}
+            style={[styles.button, styles.logout]}>
+            <AntDesign color={COLORS.white} size={20} name="logout" />
+            <Text title color={COLORS.white}>
+              Log Out
+            </Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={onLogOut}
-          style={[styles.button, styles.logout]}>
-          <AntDesign color={COLORS.white} size={20} name="logout" />
-          <Text title color={COLORS.white}>
-            Log Out
-          </Text>
-        </TouchableOpacity>
-      </View>
-    </BackgroundView>
+      </BackgroundView>
+    </RefreshControl>
   );
 };
 

@@ -2,8 +2,12 @@ import axios from 'axios';
 import Toast from 'react-native-simple-toast';
 
 import {stackName} from '../../configs/NavigationContants';
-import {navigate, replace} from '../../navigation/NavigationWithoutProp';
+import {replace} from '../../navigation/NavigationWithoutProp';
 import {
+  addProductToCartSuccess,
+  changeQuantityProductInCartSuccess,
+  removeProductToCartSuccess,
+  requestAddOrderFail,
   requestLikeProductSuccess,
   requestLoginUserFail,
   requestLoginUserSuccess,
@@ -105,6 +109,101 @@ export const requestUnLikeProduct = (id, token) => {
     } catch (e) {
       console.log(e);
       // dispatch(requestProductFavoritesFail(e));
+    }
+  };
+};
+
+export const requestEditProfile = (email, name, gender, phone, token) => {
+  return async dispatch => {
+    try {
+      const response = await axios({
+        method: 'POST',
+        url: 'http://svcy3.myclass.vn/api/Users/updateProfile',
+        headers: {Authorization: `Bearer ${token}`},
+        data: {
+          email,
+          password: '',
+          name,
+          gender,
+          phone,
+        },
+      });
+      Toast.show('Cập nhật tài khoản thành công!');
+    } catch (e) {
+      console.log(e);
+      Toast.show('Không thể cập nhật tài khoản!', Toast.SHORT);
+    }
+  };
+};
+
+export const requestChangePassword = (newPassword, token) => {
+  return async dispatch => {
+    try {
+      const response = await axios({
+        method: 'POST',
+        url: 'http://svcy3.myclass.vn/api/Users/changePassword',
+        headers: {Authorization: `Bearer ${token}`},
+        data: {
+          newPassword,
+        },
+      });
+      Toast.show('Cập nhật mật khẩu thành công!');
+    } catch (e) {
+      console.log(e);
+      Toast.show('Không thể thay đổi mật khẩu!', Toast.SHORT);
+    }
+  };
+};
+
+export const addProductToCart = (product, size, quantity) => {
+  return async dispatch => {
+    Toast.show('Thêm vào giỏ hàng thành công', Toast.SHORT);
+    try {
+      dispatch(addProductToCartSuccess(product, size, quantity));
+    } catch (e) {
+      Toast.show('Lỗi! Vui lòng thử lại sau', Toast.SHORT);
+      console.log(e);
+    }
+  };
+};
+
+export const removeProductToCart = index => {
+  return async dispatch => {
+    try {
+      dispatch(removeProductToCartSuccess(index));
+      Toast.show('Xóa sản phẩm khỏi giỏ thành công', Toast.SHORT);
+    } catch (e) {
+      Toast.show('Lỗi! Vui lòng thử lại sau', Toast.SHORT);
+      console.log(e);
+    }
+  };
+};
+
+export const changeQuantityProductInCart = (quantity, index) => {
+  return async dispatch => {
+    try {
+      dispatch(changeQuantityProductInCartSuccess(quantity, index));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+};
+
+export const requestAddOrder = (orderDetail, email) => {
+  return async dispatch => {
+    try {
+      const response = await axios({
+        method: 'POST',
+        url: 'http://svcy3.myclass.vn/api/Users/order',
+        data: {
+          orderDetail,
+          email,
+        },
+      });
+      Toast.show(response.data.content, Toast.SHORT);
+    } catch (e) {
+      console.log(e);
+      Toast.show(e.message, Toast.SHORT);
     }
   };
 };

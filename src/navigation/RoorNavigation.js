@@ -23,6 +23,11 @@ const RoorNavigation = () => {
         name={stackName.detailStack}
         component={Screens.DetailScreen}
       />
+      <Stack.Screen
+        name={stackName.editProfileStack}
+        component={Screens.EditProfileScreen}
+      />
+      <Stack.Screen name={stackName.cartStack} component={Screens.CartScreen} />
     </Stack.Navigator>
   );
 };

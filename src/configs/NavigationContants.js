@@ -3,6 +3,8 @@ const stackName = {
   signupStack: 'SignUpStack',
   homeStack: 'HomeStack',
   detailStack: 'DetailStack',
+  editProfileStack: 'EditProfileStack',
+  cartStack: 'CartStack',
 };
 
 const tabName = {
