@@ -1,4 +1,11 @@
-import {StyleSheet, View, TouchableOpacity, FlatList} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  FlatList,
+  Modal,
+  Pressable,
+} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -9,6 +16,7 @@ import {requestListProduct} from '../../redux/thunk/ProductActionThunk';
 import ItemCardOption from './ItemCardOption';
 import {goBack} from '../../navigation/NavigationWithoutProp';
 import {requestAddOrder} from '../../redux/thunk/UserActionThunk';
+import {storeData} from '../../utils';
 
 const CartScreen = () => {
   const listProductInCart = useSelector(
@@ -18,11 +26,9 @@ const CartScreen = () => {
 
   const [quantity, setQuantity] = useState(0);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(requestListProduct());
-  }, []);
 
   useEffect(() => {
     setQuantity(0);
@@ -31,6 +37,7 @@ const CartScreen = () => {
       setQuantity(quantity => quantity + product.quantity);
       setTotalPrice(price => price + product.quantity * product.product.price);
     });
+    storeData(profile.email, listProductInCart);
   }, [listProductInCart]);
 
   const onPressBack = () => {
@@ -43,11 +50,30 @@ const CartScreen = () => {
       quantity: product.quantity,
     }));
     dispatch(requestAddOrder(orderDetail, profile.email));
+    setModalVisible(true);
   };
 
   const renderEmptyProduct = () => {
     return (
       <BackgroundView style={{justifyContent: 'center', alignItems: 'center'}}>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={modalVisible}
+          onRequestClose={() => {
+            setModalVisible(!modalVisible);
+          }}>
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text title>Đặt hàng thành công!</Text>
+              <Pressable
+                style={styles.button}
+                onPress={() => setModalVisible(!modalVisible)}>
+                <Text style={styles.textStyle}>Okey</Text>
+              </Pressable>
+            </View>
+          </View>
+        </Modal>
         <TouchableOpacity
           onPress={onPressBack}
           style={styles.containerButtonBack}>
@@ -118,6 +144,27 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
   containerHeader: {
     marginVertical: 20,
     marginLeft: 40,
@@ -144,5 +191,12 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.secondary,
     borderRadius: 30,
     marginBottom: 40,
+  },
+  button: {
+    borderRadius: 10,
+    padding: 10,
+    elevation: 2,
+    backgroundColor: COLORS.secondary,
+    marginTop: 10,
   },
 });

@@ -15,6 +15,7 @@ const HomeTab = () => {
       HomeTab: 'home',
       FavouriteTab: 'favorite',
       ProfileTab: 'person',
+      MapTab: 'map',
     };
     const color = focused ? COLORS.secondary : COLORS.lightBack;
 
@@ -48,6 +49,7 @@ const HomeTab = () => {
         name={tabName.favouriteTab}
         component={Screens.FavoriteScreen}
       />
+      <BottomTab.Screen name={tabName.mapTab} component={Screens.MapScreen} />
       <BottomTab.Screen
         name={tabName.profileTab}
         component={Screens.ProfileScreen}

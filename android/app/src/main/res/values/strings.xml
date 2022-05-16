@@ -2,4 +2,6 @@
     <string name="app_name">Shopping_App</string>
     <string name="facebook_app_id">313166914131081</string>
 <string name="fb_login_protocol_scheme">fb313166914131081</string>
+<string name="facebook_client_token">56789</string>
+<string name="google_api_key">AIzaSyAIc0Z5yDFo6SuKp6y2-cYR_UDYKLjlG7E</string>
 </resources>

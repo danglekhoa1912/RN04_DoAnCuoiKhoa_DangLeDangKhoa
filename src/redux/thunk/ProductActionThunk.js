@@ -6,6 +6,8 @@ import {
   requestListProductSuccess,
   requestProductDetailFail,
   requestProductDetailSuccess,
+  requestStoreFail,
+  requestStoreSuccess,
 } from '../actions/ProductAction';
 
 export const requestListProduct = () => {
@@ -49,6 +51,21 @@ export const requestProductDetail = id => {
     } catch (e) {
       console.log(e);
       dispatch(requestProductDetailFail(e));
+    }
+  };
+};
+
+export const requestStore = () => {
+  return async dispatch => {
+    try {
+      const response = await axios({
+        method: 'GET',
+        url: 'http://svcy3.myclass.vn/api/Product/getAllStore',
+      });
+      dispatch(requestStoreSuccess(response.data.content));
+    } catch (e) {
+      console.log(e);
+      dispatch(requestStoreFail(e));
     }
   };
 };

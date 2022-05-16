@@ -3,11 +3,14 @@ import Toast from 'react-native-simple-toast';
 
 import {stackName} from '../../configs/NavigationContants';
 import {replace} from '../../navigation/NavigationWithoutProp';
+import {getData} from '../../utils';
 import {
   addProductToCartSuccess,
   changeQuantityProductInCartSuccess,
+  loginWithFacebookSuccess,
   removeProductToCartSuccess,
   requestAddOrderFail,
+  requestAddOrderSuccess,
   requestLikeProductSuccess,
   requestLoginUserFail,
   requestLoginUserSuccess,
@@ -41,6 +44,25 @@ export const requestLoginUser = (email, password) => {
   };
 };
 
+export const loginWithFacebook = facebookToken => {
+  return async dispatch => {
+    try {
+      const response = await axios({
+        method: 'POST',
+        url: 'http://svcy3.myclass.vn/api/Users/facebooklogin',
+        data: {
+          facebookToken,
+        },
+      });
+      Toast.show('Đăng nhập thành công', Toast.SHORT);
+      dispatch(loginWithFacebookSuccess(response.data.content.accessToken));
+      replace(stackName.homeStack);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+};
+
 export const requestProfileUser = token => {
   return async dispatch => {
     try {
@@ -49,7 +71,9 @@ export const requestProfileUser = token => {
         url: 'http://svcy3.myclass.vn/api/Users/getProfile',
         headers: {Authorization: `Bearer ${token}`},
       });
-      dispatch(requestProfiledUserSuccess(response.data.content));
+      getData(response.data.content.email).then(value => {
+        dispatch(requestProfiledUserSuccess(response.data.content, value));
+      });
     } catch (e) {
       console.log(e);
       dispatch(requestProfiledUserFail(e));
@@ -83,7 +107,6 @@ export const requestLikeProduct = (id, token) => {
         url: `http://svcy3.myclass.vn/api/Users/like?productId=${id}`,
         headers: {Authorization: `Bearer ${token}`},
       });
-      console.log(response.data);
       // dispatch(
       //   requestLikeProductSuccess(response.data.content.productsFavorite),
       // );
@@ -105,7 +128,6 @@ export const requestUnLikeProduct = (id, token) => {
       // dispatch(
       //   requestLikeProductSuccess(response.data.content.productsFavorite),
       // );
-      console.log(response.data);
     } catch (e) {
       console.log(e);
       // dispatch(requestProductFavoritesFail(e));
@@ -200,9 +222,11 @@ export const requestAddOrder = (orderDetail, email) => {
           email,
         },
       });
+      dispatch(requestAddOrderSuccess());
       Toast.show(response.data.content, Toast.SHORT);
     } catch (e) {
       console.log(e);
+      dispatch(requestAddOrderFail());
       Toast.show(e.message, Toast.SHORT);
     }
   };

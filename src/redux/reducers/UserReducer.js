@@ -1,6 +1,10 @@
+import {getData} from '../../utils';
 import {
   ADD_PRODUCT_TO_CART,
   CHANGE_QUANTITY_PRODUCT_IN_CART,
+  LOGIN_WITH_FACEBOOK_FAIL,
+  LOGIN_WITH_FACEBOOK_SUCCESS,
+  LOGOUT_USER,
   REMOVE_PRODUCT_TO_CART,
   REQUEST_ADD_ORDER_FAIL,
   REQUEST_ADD_ORDER_SUCCESS,
@@ -36,8 +40,16 @@ export default (state = initialState, {type, payload}) => {
       return {...state, token: payload};
     case REQUEST_LOGIN_USER_FAIL:
       return {...state, token: payload};
+    case LOGIN_WITH_FACEBOOK_SUCCESS:
+      return {...state, token: payload};
+    case LOGIN_WITH_FACEBOOK_FAIL:
+      return {...state, token: payload};
     case REQUEST_PROFILED_USER_SUCCESS:
-      return {...state, profile: payload};
+      return {
+        ...state,
+        profile: payload.profile,
+        listProductInCart: payload.listProductInCart,
+      };
     case REQUEST_PROFILED_USER_FAIL:
       return {...state, profile: payload};
     case REQUEST_PRODUCT_FAVORITES_SUCCESS:
@@ -63,6 +75,13 @@ export default (state = initialState, {type, payload}) => {
         ...state,
         listProductInCart: newArrayChangeQuantity,
       };
+    case REQUEST_ADD_ORDER_SUCCESS:
+      return {
+        ...state,
+        listProductInCart: [],
+      };
+    case LOGOUT_USER:
+      return initialState;
     default:
       return state;
   }

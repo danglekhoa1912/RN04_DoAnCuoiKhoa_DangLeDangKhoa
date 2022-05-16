@@ -16,10 +16,16 @@ import {useDispatch, useSelector} from 'react-redux';
 import {requestProductDetail} from '../../redux/thunk/ProductActionThunk';
 import {IndexPath, Select, SelectItem, Spinner} from '@ui-kitten/components';
 import {addProductToCart} from '../../redux/thunk/UserActionThunk';
+import {storeData} from '../../utils';
 
 const DetailScreen = props => {
   const [selectedIndex, setSelectedIndex] = useState(new IndexPath(0));
   const [isLoading, setIsLoading] = useState(true);
+  const listProductInCart = useSelector(
+    state => state.UserReducer.listProductInCart,
+  );
+  const profile = useSelector(state => state.UserReducer.profile);
+
   const onPressBack = () => {
     goBack();
   };
@@ -31,11 +37,16 @@ const DetailScreen = props => {
   useEffect(() => {
     dispatch(requestProductDetail(props.route.params.id));
   }, []);
+
   useEffect(() => {
     if (product.size) {
       setIsLoading(false);
     }
   }, [product]);
+
+  useEffect(() => {
+    storeData(profile.email, listProductInCart);
+  }, [listProductInCart]);
 
   const addCart = () => {
     dispatch(addProductToCart(product, product.size[selectedIndex.row], 1));

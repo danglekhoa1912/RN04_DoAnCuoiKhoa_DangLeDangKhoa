@@ -15,6 +15,8 @@ import {requestProfileUser} from '../../redux/thunk/UserActionThunk';
 import {COLORS} from '../../themes';
 import {stackName} from '../../configs/NavigationContants';
 import {navigate, replace} from '../../navigation/NavigationWithoutProp';
+import {logoutUser} from '../../redux/actions/UserAction';
+import {LoginManager} from 'react-native-fbsdk-next';
 
 const RenderInfor = ({title, infor}) => {
   return (
@@ -40,11 +42,17 @@ const ProfileScreen = () => {
   }, []);
 
   const onLogOut = () => {
+    if (profile.facebookId != '') LoginManager.logOut();
+    logoutUser();
     replace(stackName.loginStack);
   };
 
   const onEditProfile = () => {
     navigate(stackName.editProfileStack);
+  };
+
+  const onOrderHistory = () => {
+    navigate(stackName.orderScreen, {token});
   };
 
   const onRefresh = () => {
@@ -87,6 +95,9 @@ const ProfileScreen = () => {
               <Text>Change Password</Text>
             </TouchableOpacity>
           </View>
+          <TouchableOpacity onPress={onOrderHistory} style={styles.button}>
+            <Text>Order History</Text>
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={onLogOut}
             style={[styles.button, styles.logout]}>

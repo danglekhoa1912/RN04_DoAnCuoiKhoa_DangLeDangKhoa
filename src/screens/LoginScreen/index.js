@@ -4,16 +4,20 @@ import {useState} from 'react';
 import * as Yup from 'yup';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {Formik} from 'formik';
+import {LoginButton, AccessToken} from 'react-native-fbsdk-next';
 
 import {BackgroundView, Text} from '../../components';
-import {Facebook, Logo} from '../../assets';
+import {Logo} from '../../assets';
 import {COLORS} from '../../themes';
 import {navigate} from '../../navigation/NavigationWithoutProp';
 import {stackName} from '../../configs/NavigationContants';
 import TextInput from '../../components/TextInput';
 import {Spinner} from '@ui-kitten/components';
 import {useDispatch} from 'react-redux';
-import {requestLoginUser} from '../../redux/thunk/UserActionThunk';
+import {
+  loginWithFacebook,
+  requestLoginUser,
+} from '../../redux/thunk/UserActionThunk';
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -122,10 +126,20 @@ const LoginScreen = () => {
               <TouchableOpacity style={styles.button} onPress={handleSubmit}>
                 {isLoading ? <Spinner /> : <Text bold>Login</Text>}
               </TouchableOpacity>
-              <TouchableOpacity style={styles.buttonFace}>
-                <Image style={{marginRight: 10}} source={Facebook} />
-                <Text bold>Login With FaceBook</Text>
-              </TouchableOpacity>
+              <LoginButton
+                style={styles.buttonFace}
+                onLoginFinished={(error, result) => {
+                  if (error) {
+                    console.log('login has error: ' + result.error);
+                  } else if (result.isCancelled) {
+                    console.log('login is cancelled');
+                  } else {
+                    AccessToken.getCurrentAccessToken().then(data => {
+                      dispatch(loginWithFacebook(data.accessToken));
+                    });
+                  }
+                }}
+              />
             </View>
           );
         }}
@@ -167,7 +181,6 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   buttonFace: {
-    flexDirection: 'row',
-    justifyContent: 'center',
+    height: 40,
   },
 });

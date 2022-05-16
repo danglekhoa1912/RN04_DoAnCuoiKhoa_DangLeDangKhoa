@@ -6,6 +6,10 @@ import ProfileScreen from './ProfileScreen';
 import DetailScreen from './DetailScreen';
 import EditProfileScreen from './EditProfileScreen';
 import CartScreen from './CartScreen';
+import MapScreen from './MapScreen';
+import DetailMapScreen from './DetailMapScreen';
+import OrderScreen from './OrderScreen';
+import DetailOrderScreen from './DetailOrderScreen';
 
 const Screens = {
   LoginScreen,
@@ -16,6 +20,10 @@ const Screens = {
   DetailScreen,
   EditProfileScreen,
   CartScreen,
+  MapScreen,
+  DetailMapScreen,
+  OrderScreen,
+  DetailOrderScreen,
 };
 
 export default Screens;
