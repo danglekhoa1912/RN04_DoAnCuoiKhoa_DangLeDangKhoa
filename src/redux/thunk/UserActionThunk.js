@@ -231,3 +231,23 @@ export const requestAddOrder = (orderDetail, email) => {
     }
   };
 };
+
+export const requestRemoveOrder = (token, orderId) => {
+  return async dispatch => {
+    try {
+      const response = await axios({
+        method: 'POST',
+        url: 'http://svcy3.myclass.vn/api/Users/deleteOrder',
+        headers: {Authorization: `Bearer ${token}`},
+        data: {
+          orderId,
+        },
+      });
+      Toast.show('Xóa đơn hàng thành công!');
+      dispatch(requestProfileUser(token));
+    } catch (e) {
+      console.log(e);
+      Toast.show('Không thể xóa đơn hàng!', Toast.SHORT);
+    }
+  };
+};

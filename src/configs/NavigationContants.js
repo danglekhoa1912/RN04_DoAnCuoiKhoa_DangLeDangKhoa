@@ -8,6 +8,7 @@ const stackName = {
   detailMapScreen: 'DetailMapScreen',
   orderScreen: 'OrderScreen',
   detailOrderScreen: 'DetailOrderScreen',
+  changePasswordScreen: 'ChangePasswordScreen',
 };
 
 const tabName = {

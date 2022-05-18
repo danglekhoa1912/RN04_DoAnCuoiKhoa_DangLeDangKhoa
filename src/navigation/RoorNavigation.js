@@ -40,6 +40,10 @@ const RoorNavigation = () => {
         name={stackName.detailOrderScreen}
         component={Screens.DetailOrderScreen}
       />
+      <Stack.Screen
+        name={stackName.changePasswordScreen}
+        component={Screens.ChangePasswordScreen}
+      />
     </Stack.Navigator>
   );
 };

@@ -10,6 +10,7 @@ import MapScreen from './MapScreen';
 import DetailMapScreen from './DetailMapScreen';
 import OrderScreen from './OrderScreen';
 import DetailOrderScreen from './DetailOrderScreen';
+import ChangePasswordScreen from './ChangePasswordScreen';
 
 const Screens = {
   LoginScreen,
@@ -24,6 +25,7 @@ const Screens = {
   DetailMapScreen,
   OrderScreen,
   DetailOrderScreen,
+  ChangePasswordScreen,
 };
 
 export default Screens;

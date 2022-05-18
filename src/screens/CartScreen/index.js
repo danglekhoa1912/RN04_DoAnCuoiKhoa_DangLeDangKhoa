@@ -12,7 +12,6 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 
 import {BackgroundView, Text} from '../../components';
 import {COLORS} from '../../themes';
-import {requestListProduct} from '../../redux/thunk/ProductActionThunk';
 import ItemCardOption from './ItemCardOption';
 import {goBack} from '../../navigation/NavigationWithoutProp';
 import {requestAddOrder} from '../../redux/thunk/UserActionThunk';
@@ -74,16 +73,7 @@ const CartScreen = () => {
             </View>
           </View>
         </Modal>
-        <TouchableOpacity
-          onPress={onPressBack}
-          style={styles.containerButtonBack}>
-          <Ionicons
-            name="ios-chevron-back-circle-sharp"
-            size={45}
-            color={COLORS.secondary}
-          />
-        </TouchableOpacity>
-        <Text>OOPS! Bạn chưa có sản phẩm nào trong giỏ</Text>
+        <Text>OOPS! You have no products in your cart</Text>
       </BackgroundView>
     );
   };
@@ -92,15 +82,6 @@ const CartScreen = () => {
     <>
       {listProductInCart.length > 0 ? (
         <BackgroundView style={styles.container}>
-          <TouchableOpacity
-            onPress={onPressBack}
-            style={styles.containerButtonBack}>
-            <Ionicons
-              name="ios-chevron-back-circle-sharp"
-              size={45}
-              color={COLORS.secondary}
-            />
-          </TouchableOpacity>
           <View style={styles.containerHeader}>
             <Text bold header>
               My Cart
@@ -134,6 +115,15 @@ const CartScreen = () => {
       ) : (
         renderEmptyProduct()
       )}
+      <TouchableOpacity
+        onPress={onPressBack}
+        style={styles.containerButtonBack}>
+        <Ionicons
+          name="ios-chevron-back-circle-sharp"
+          size={45}
+          color={COLORS.secondary}
+        />
+      </TouchableOpacity>
     </>
   );
 };

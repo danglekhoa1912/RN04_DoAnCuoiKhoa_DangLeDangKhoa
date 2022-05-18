@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     fontSize: 35,
   },
   title: {
-    fontSize: 22,
+    fontSize: 25,
   },
   subText: {
     opacity: 0.7,

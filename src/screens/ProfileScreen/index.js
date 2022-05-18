@@ -55,6 +55,10 @@ const ProfileScreen = () => {
     navigate(stackName.orderScreen, {token});
   };
 
+  const onChangePassword = () => {
+    navigate(stackName.changePasswordScreen, {});
+  };
+
   const onRefresh = () => {
     dispatch(requestProfileUser(token)).then(() => {
       setRefreshing(false);
@@ -91,7 +95,7 @@ const ProfileScreen = () => {
             <TouchableOpacity onPress={onEditProfile} style={styles.button}>
               <Text>Edit Profile</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.button}>
+            <TouchableOpacity onPress={onChangePassword} style={styles.button}>
               <Text>Change Password</Text>
             </TouchableOpacity>
           </View>

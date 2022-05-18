@@ -26,7 +26,7 @@ const CardOrder = ({order}) => {
       </View>
       <TouchableOpacity onPress={onPressDetailOrder} style={styles.button}>
         <Text content style={styles.text}>
-          Chi tiết đơn hàng
+          Order details
         </Text>
       </TouchableOpacity>
     </View>

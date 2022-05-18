@@ -139,3 +139,13 @@ export const loginWithFacebookFail = payload => ({
   type: LOGIN_WITH_FACEBOOK_FAIL,
   payload,
 });
+
+// export const requestRemoveOrderSuccess = payload => ({
+//   type: REQUEST_REMOVE_ORDER_SUCCESS,
+//   payload,
+// });
+
+// export const requestRemoveOrderFail = payload => ({
+//   type: REQUEST_REMOVE_ORDER_FAIL,
+//   payload,
+// });
