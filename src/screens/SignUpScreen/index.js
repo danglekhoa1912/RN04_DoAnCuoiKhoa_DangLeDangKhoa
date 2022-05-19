@@ -10,7 +10,6 @@ import {SignUp} from '../../assets';
 import {BackgroundView, Text} from '../../components';
 import {COLORS} from '../../themes';
 import TextInput from '../../components/TextInput';
-import {stackName} from '../../configs/NavigationContants';
 import {goBack} from '../../navigation/NavigationWithoutProp';
 import axios from 'axios';
 
@@ -49,16 +48,6 @@ const SignUpScreen = () => {
   const renderIconLeft = name => (
     <Ionicons size={25} color={COLORS.secondary} name={name} />
   );
-
-  // const handleSubmit = ({email, password, name, phone, gender}) => {
-  //   dispatch(requestSignupUser(new User(email, password, phone, name, gender)));
-  //   if (isSignup.isSuccess) {
-  //     Toast.show(isSignup.message, Toast.LONG);
-  //     navigate(stackName.loginStack);
-  //   } else {
-  //     Toast.show('Email đã được sử dụng', Toast.LONG);
-  //   }
-  // };
 
   const handleSubmit = async ({email, password, name, phone, gender}) => {
     setIsLoading(true);

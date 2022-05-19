@@ -1,20 +1,15 @@
-import {getData} from '../../utils';
 import {
   ADD_PRODUCT_TO_CART,
   CHANGE_QUANTITY_PRODUCT_IN_CART,
   LOGIN_WITH_FACEBOOK_FAIL,
   LOGIN_WITH_FACEBOOK_SUCCESS,
-  LOGOUT_USER,
   REMOVE_PRODUCT_TO_CART,
-  REQUEST_ADD_ORDER_FAIL,
   REQUEST_ADD_ORDER_SUCCESS,
   REQUEST_LOGIN_USER_FAIL,
   REQUEST_LOGIN_USER_SUCCESS,
   REQUEST_PRODUCT_FAVORITES_SUCCESS,
   REQUEST_PROFILED_USER_FAIL,
   REQUEST_PROFILED_USER_SUCCESS,
-  REQUEST_REMOVE_ORDER_FAIL,
-  REQUEST_REMOVE_ORDER_SUCCESS,
 } from '../actions/UserAction';
 
 const initialState = {
@@ -80,8 +75,6 @@ export default (state = initialState, {type, payload}) => {
         ...state,
         listProductInCart: [],
       };
-    case LOGOUT_USER:
-      return initialState;
     default:
       return state;
   }

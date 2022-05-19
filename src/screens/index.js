@@ -4,7 +4,6 @@ import HomeScreen from './HomeScreen';
 import FavoriteScreen from './FavoriteScreen';
 import ProfileScreen from './ProfileScreen';
 import DetailScreen from './DetailScreen';
-import EditProfileScreen from './EditProfileScreen';
 import CartScreen from './CartScreen';
 import MapScreen from './MapScreen';
 import DetailMapScreen from './DetailMapScreen';
@@ -19,7 +18,6 @@ const Screens = {
   FavoriteScreen,
   ProfileScreen,
   DetailScreen,
-  EditProfileScreen,
   CartScreen,
   MapScreen,
   DetailMapScreen,

@@ -1,4 +1,3 @@
-import {StyleSheet} from 'react-native';
 import React from 'react';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {stackName} from '../configs/NavigationContants';
@@ -23,10 +22,6 @@ const RoorNavigation = () => {
         name={stackName.detailStack}
         component={Screens.DetailScreen}
       />
-      <Stack.Screen
-        name={stackName.editProfileStack}
-        component={Screens.EditProfileScreen}
-      />
       <Stack.Screen name={stackName.cartStack} component={Screens.CartScreen} />
       <Stack.Screen
         name={stackName.detailMapScreen}
@@ -49,5 +44,3 @@ const RoorNavigation = () => {
 };
 
 export default RoorNavigation;
-
-const styles = StyleSheet.create({});

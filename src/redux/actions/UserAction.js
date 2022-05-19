@@ -22,7 +22,6 @@ export const REQUEST_ADD_ORDER_SUCCESS = 'REQUEST_ADD_ORDER_SUCCESS';
 export const REQUEST_ADD_ORDER_FAIL = 'REQUEST_ADD_ORDER_FAIL';
 export const REQUEST_REMOVE_ORDER_SUCCESS = 'REQUEST_REMOVE_ORDER_SUCCESS';
 export const REQUEST_REMOVE_ORDER_FAIL = 'REQUEST_REMOVE_ORDER_FAIL';
-export const LOGOUT_USER = 'LOGOUT_USER';
 export const LOGIN_WITH_FACEBOOK_SUCCESS = 'LOGIN_WITH_FACEBOOK_SUCCESS';
 export const LOGIN_WITH_FACEBOOK_FAIL = 'LOGIN_WITH_FACEBOOK_FAIL';
 
@@ -126,10 +125,6 @@ export const requestAddOrderFail = () => ({
   type: REQUEST_ADD_ORDER_FAIL,
 });
 
-export const logoutUser = () => ({
-  type: LOGOUT_USER,
-});
-
 export const loginWithFacebookSuccess = payload => ({
   type: LOGIN_WITH_FACEBOOK_SUCCESS,
   payload,
@@ -139,13 +134,3 @@ export const loginWithFacebookFail = payload => ({
   type: LOGIN_WITH_FACEBOOK_FAIL,
   payload,
 });
-
-// export const requestRemoveOrderSuccess = payload => ({
-//   type: REQUEST_REMOVE_ORDER_SUCCESS,
-//   payload,
-// });
-
-// export const requestRemoveOrderFail = payload => ({
-//   type: REQUEST_REMOVE_ORDER_FAIL,
-//   payload,
-// });

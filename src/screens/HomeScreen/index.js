@@ -9,6 +9,7 @@ import {
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import AntIcon from 'react-native-vector-icons/AntDesign';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {Spinner} from '@ui-kitten/components';
 
 import {
@@ -67,6 +68,10 @@ const HomeScreen = () => {
 
   const onPressCart = () => {
     navigate(stackName.cartStack);
+  };
+
+  const onOrderHistory = () => {
+    navigate(stackName.orderScreen, {token});
   };
 
   const renderListCategory = ({category, id}) => {
@@ -162,12 +167,17 @@ const HomeScreen = () => {
             <View style={styles.containerUser}>
               <Image style={styles.avatar} source={avatar} />
               <Text bold title>
-                Welcome {profile.name}
+                {profile.name}
               </Text>
             </View>
-            <TouchableOpacity onPress={onPressCart}>
-              <AntIcon name="shoppingcart" size={30} />
-            </TouchableOpacity>
+            <View style={styles.containerIcon}>
+              <TouchableOpacity onPress={onPressCart}>
+                <AntIcon name="shoppingcart" size={30} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={onOrderHistory}>
+                <FontAwesome name="history" size={30} />
+              </TouchableOpacity>
+            </View>
           </View>
           <View style={styles.containerTitle}>
             <TouchableOpacity
@@ -215,6 +225,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
+  containerIcon: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: 100,
+  },
   avatar: {
     width: 50,
     height: 50,
@@ -224,9 +239,6 @@ const styles = StyleSheet.create({
   containerTitle: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-  },
-  title: {
-    color: COLORS.lightBack,
   },
   containerProduct: {
     marginHorizontal: 20,
